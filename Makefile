@@ -1,13 +1,16 @@
-
 NAME			= woody_woodpacker
 
-SRC				= srcs/main.c
+SRCS_DIR = srcs
+INC_DIR = inc
 
-SRC_ASM			=
+SRC_NAMES		=	srcs/main.c \
+					srcs/error.c
 
-OBJ_ASM			= $(SRC_ASM:.asm=.o)
+SRC_ASM_NAMES	=
 
-OBJ				= $(SRC:.c=.o)
+OBJ_ASM			= $(SRC_ASM_NAMES:.asm=.o)
+
+OBJ		 		= $(SRC_NAMES:.c=.o)
 
 INCLUDES		= ./inc
 
@@ -19,18 +22,21 @@ NASM			= nasm
 
 RM				= rm -f
 
-override CFLAGS	= -Wall -Wextra -Werror -I $(INCLUDES)
+CFLAGS			= -Wall -Wextra -Werror -I $(INCLUDES)
 
-override NFLAGS	+=
+NFLAGS			=
 
-$(LIBFT):
-	@make -C libft/
+SRC	 			= $(addprefix $(SRCS_DIR)/, $(SRC_NAMES))
+SRC_ASM			= $(addprefix $(SRCS_DIR)/, $(SRC_ASM_NAMES))
 
-$(NAME):	$(OBJ) $(OBJ_ASM) $(LIBFT)
-		$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(OBJ_ASM)
+# $(LIBFT):
+# 	@make -C libft/
 
-$(OBJ_ASM):	$(SRC_ASM)
-		$(NASM) $(NFLAGS) -o $@ $<
+$(NAME):	 $(OBJ) $(OBJ_ASM)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(OBJ_ASM)
+
+$(SRCS_DIR)/%.o: $(SRCS_DIR)/%.c
+	$(CC) $(CFLAGS) -c -o $@ $^
 
 all:		$(NAME)
 

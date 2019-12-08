@@ -1,0 +1,8 @@
+open close exit
+fputs
+fflush lseek
+mmap munmap
+perror strerror
+syscall
+les fonctions de la famille printf.
+les fonctions autorisées dans le cadre de votre libft(read write, malloc, free,par exemple :-) )
