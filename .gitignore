@@ -1,0 +1,6 @@
+*.o
+woody_woodpacker
+libft.h.gch
+
+# IDE
+.vscode
