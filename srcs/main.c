@@ -6,7 +6,7 @@
 /*   By: lsimon <lsimon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 14:44:08 by lsimon            #+#    #+#             */
-/*   Updated: 2019/12/13 18:51:12 by lsimon           ###   ########.fr       */
+/*   Updated: 2019/12/24 12:22:18 by lsimon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_content	*init_content(void *start, size_t len)
 	t_content	*content;
 
 	if ((content = malloc(sizeof(content))) == NULL)
-		return (null_error("Unable to allocate memory for t_content struct"));
+		return (null_perror("Unable to allocate memory for t_content struct"));
 	content->start = start;
 	content->len = len;
 
@@ -35,11 +35,11 @@ static t_content	*map_file(const char *filename)
 	int			fd;
 
 	if ((fd = open(filename, O_RDWR)) == -1)
-		return (null_error("Unable to open file"));
+		return (null_perror("Unable to open file"));
 	if (fstat(fd, &buf) == -1)
 	{
 		close(fd);
-		return (null_error("Unable to read file stats"));
+		return (null_perror("Unable to read file stats"));
 	}
 	start = mmap(NULL,
 		buf.st_size,
@@ -50,11 +50,20 @@ static t_content	*map_file(const char *filename)
 
 	if (start == MAP_FAILED)
 	{
-		close(fd);
-		return (null_error("Unable to map file content into virtual memory"));
+		close(fd);	
+		return (null_perror("Unable to map file content into virtual memory"));
 	}
 	close(fd);
 	return (init_content(start, buf.st_size));
+}
+
+static int	get_last_ptload_index(t_p_header *p_header, Elf64_Half i)
+{
+	if (p_header[i].p_type == PT_LOAD)
+		return (i);
+	if (i == 0)
+		return (int_error("No PT_LOAD found"));
+	return (get_last_ptload_index(p_header, i - 1));
 }
 
 /*
@@ -70,24 +79,27 @@ static void			lookup(t_content *content)
 {
 	t_elf		*header;
 	t_p_header	*p_header;
+	int			p_load_index;
 
 	header = (t_elf *)content->start;
 	printf("(debug) header->e_ident: %s\n", header->e_ident);
 	printf("(debug) header->e_entry: %llu\n", header->e_entry);
 	printf("(debug) header->e_phoff: %llu\n", header->e_phoff);
 	printf("(debug) header->e_phnum: %hu\n", header->e_phnum);
+	printf("(debug) header->e_shnum: %hu\n", header->e_shnum);
 
 	p_header = (t_p_header *)((char *)header + header->e_phoff);
-	for (int i = 0; i < header->e_phnum; i++)
-	{
-		if (p_header[i].p_type == PT_LOAD)
-		{
-			printf("(debug) p_header[i].p_offset: %llu\n", p_header[i].p_offset);
-			printf("(debug) p_header[i].p_vaddr: %llu\n", p_header[i].p_vaddr);
-			printf("(debug) p_header[i].p_filesz: %llu\n", p_header[i].p_filesz);
-			printf("(debug) p_header[i].p_memsz: %llu\n", p_header[i].p_memsz);
-		}
-	}
+	p_load_index = get_last_ptload_index(p_header, header->e_phnum - 1);
+	if (p_load_index == -1)
+		return ;
+	printf("(debug) p_header[p_load_index].p_offset: 0x%llx\n",
+		p_header[p_load_index].p_offset);
+	printf("(debug) p_header[p_load_index].p_vaddr: 0x%llx\n",
+		p_header[p_load_index].p_vaddr);
+	printf("(debug) p_header[p_load_index].p_filesz: 0x%llx\n",
+		p_header[p_load_index].p_filesz);
+	printf("(debug) p_header[p_load_index].p_memsz: 0x%llx\n",
+		p_header[p_load_index].p_memsz);
 }
 
 int	main(int ac, char **av)

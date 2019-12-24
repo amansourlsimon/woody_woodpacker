@@ -6,15 +6,13 @@
 /*   By: lsimon <lsimon@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 14:48:39 by lsimon            #+#    #+#             */
-/*   Updated: 2019/12/13 17:47:23 by lsimon           ###   ########.fr       */
+/*   Updated: 2019/12/24 12:22:50 by lsimon           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WOODY_WOODPACKER_H
 
 # define WOODY_WOODPACKER_H
-
-# include "./elf.h"
 
 # include <stdio.h>
 # include <fcntl.h>
@@ -23,12 +21,22 @@
 # include <unistd.h>
 # include <stdlib.h>
 
+# include "./elf.h"
+# include "../libft/libft.h"
+
 typedef struct s_content
 {
 	void	*start;
 	size_t	len;
 }				t_content;
 
-void	*null_error(char *s);
+/*
+** error
+*/
+
+void	*null_error(const char *s);
+int		int_error(const char *s);
+void	*null_perror(const char *s);
+int		int_perror(const char *s);
 
 #endif
