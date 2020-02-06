@@ -3,9 +3,9 @@ NAME		=	woody_woodpacker
 SRC			=	srcs/main.c		\
 		  		srcs/error.c		\
 
-# SRC_ASM		= src/stub.s
+SRC_ASM		= 	srcs/stub.s
 
-OBJ_ASM		= 	$(SRC_ASM:.asm=.o)
+OBJ_ASM		= 	$(SRC_ASM:.s=.o)
 
 OBJ			= 	$(SRC:.c=.o)
 
@@ -17,9 +17,9 @@ NASM		=	nasm
 
 RM			=	rm -f
 
-CFLAGS		= -Wall -Wextra -Wextra -fsanitize=address -g -I $(INCLUDES)
+CFLAGS		=	-Wall -Wextra -Wextra -fsanitize=address -g -I $(INCLUDES)
 
-NFLAGS		= -f elf64
+NFLAGS		= 	-f elf64
 
 $(NAME):	$(OBJ) $(OBJ_ASM)
 		$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(OBJ_ASM)
