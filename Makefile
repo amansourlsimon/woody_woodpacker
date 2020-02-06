@@ -1,41 +1,40 @@
-NAME			= woody_woodpacker
-SRCS_DIR = srcs
-INC_DIR = inc
-SRC_NAMES		=	srcs/main.c \
-					srcs/error.c
-SRC_ASM_NAMES	=
-OBJ_ASM			= $(SRC_ASM_NAMES:.asm=.o)
-OBJ		 		= $(SRC_NAMES:.c=.o)
-INCLUDES		= ./inc
-LIBFT			= ./libft/libft.a
-LIBS			= -Llibft -lft
-CC				= clang
-NASM			= nasm
-RM				= rm -f
-CFLAGS			= -Wall -Wextra -Werror -I $(INCLUDES)
-NFLAGS			=
-SRC	 			= $(addprefix $(SRCS_DIR)/, $(SRC_NAMES))
-SRC_ASM			= $(addprefix $(SRCS_DIR)/, $(SRC_ASM_NAMES))
+NAME		=	woody_woodpacker
 
-# $(LIBFT):
-# 	@make -C libft/
+SRC			=	srcs/main.c		\
+		  		srcs/error.c		\
 
-$(NAME):	 $(OBJ) $(OBJ_ASM)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(OBJ_ASM) $(LIBS)
+# SRC_ASM		= src/stub.s
 
-$(SRCS_DIR)/%.o: $(SRCS_DIR)/%.c
-	$(CC) $(CFLAGS) -c -o $@ $^
+OBJ_ASM		= 	$(SRC_ASM:.asm=.o)
+
+OBJ			= 	$(SRC:.c=.o)
+
+INCLUDES	= 	./inc
+
+CC			=	clang
+
+NASM		=	nasm
+
+RM			=	rm -f
+
+CFLAGS		= -Wall -Wextra -Wextra -fsanitize=address -g -I $(INCLUDES)
+
+NFLAGS		= -f elf64
+
+$(NAME):	$(OBJ) $(OBJ_ASM)
+		$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(OBJ_ASM)
+
+$(OBJ_ASM):	$(SRC_ASM)
+		$(NASM) $(NFLAGS) -o $@ $<
 
 all:		$(NAME)
 
 clean:
-	make clean -C libft
-	$(RM) $(OBJ) $(OBJ_ASM)
+		$(RM) $(OBJ) $(OBJ_ASM)
 
 fclean:		clean
-	$(RM) libft/libft.a
-	$(RM) $(NAME)
+		$(RM) $(NAME) exec
 
-re:			fclean all
+re:		fclean all
 
 .PHONY:		all clean fclean re

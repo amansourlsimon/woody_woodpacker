@@ -20,9 +20,8 @@
 # include <sys/stat.h>
 # include <unistd.h>
 # include <stdlib.h>
-
-# include "./elf.h"
-# include "../libft/libft.h"
+# include <string.h>
+# include <elf.h>
 
 typedef struct s_content
 {

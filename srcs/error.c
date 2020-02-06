@@ -14,13 +14,13 @@
 
 void	*null_error(const char *s)
 {
-	ft_putstr_fd(s, 2);
+	dprintf(2, "%s\n", s);
 	return (NULL);
 }
 
 int		int_error(const char *s)
 {
-	ft_putstr_fd(s, 2);
+	dprintf(2, "%s\n", s);
 	return (-1);
 }
 
