@@ -7,7 +7,7 @@ stub:
 stub_start:
 	jmp woody_string
 
-stub_len: dq stub_end - stub_start
+stub_len: dq stub_end - stub
 
 stub_core:
 	mov rax, 1
@@ -15,7 +15,9 @@ stub_core:
 	pop rsi				; pop message of the stack
 	mov rdx, 9
 	syscall				; write(1, "Woody...\n", 9)
-	ret
+
+	push 0x400080
+	ret					; jump to original entry point (hardCoded)
 
 woody_string:
 	call stub_core
