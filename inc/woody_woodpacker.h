@@ -26,16 +26,18 @@
 typedef struct s_content
 {
 	void	*start;
-	size_t	len;
+	size_t	size;
 }				t_content;
+
+t_content	*pack(void *to_pack, size_t size);
 
 /*
 ** error
 */
 
-void	*null_error(const char *s);
-int		int_error(const char *s);
-void	*null_perror(const char *s);
-int		int_perror(const char *s);
+void		*null_error(const char *s);
+int			int_error(const char *s);
+void		*null_perror(const char *s);
+int			int_perror(const char *s);
 
 #endif

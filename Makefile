@@ -1,7 +1,8 @@
 NAME		=	woody_woodpacker
 
 SRC			=	srcs/main.c		\
-		  		srcs/error.c		\
+		  		srcs/error.c	\
+				srcs/pack.c
 
 SRC_ASM		= 	srcs/stub.s
 
