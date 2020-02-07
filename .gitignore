@@ -1,0 +1,12 @@
+*.o
+woody_woodpacker
+libft.h.gch
+
+# IDE
+.vscode
+
+# other
+resources
+hello*
+packer
+woody
